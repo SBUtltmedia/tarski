@@ -1,0 +1,63 @@
+1-1
+2 .25 0 .575 2; Move the blocks to make the statement true.
+.9 .125 -.5 .25 1; bottom .75; For all shapes x...
+.9 .125 .5 -.25 1; top .1; x is on the ground.
+
+1-2
+2 .25 0 .575 1; ¬ is the negation operator.
+.9 .125 -.5 .25 1; bottom .725; For all shapes x...
+1.2 .125 .3 -.25 1; top .25; x is NOT on the ground.
+
+1-3
+2 .25 0 .575 1; ∃ means 'there exists'.
+1.4 .125 -.125 .25 1; bottom .4; There is at least one shape x...
+1.3 .125 .125 -.25 1; top .4; such that x is on the ground.
+
+1-4
+2 .25 0 .7 2; ∧ means 'and'. To be true, both sides of the operator must be true.
+1.6 .125 0 .375 1; bottom .4625; ...x is red AND x is on the ground.
+
+1-5
+2 .25 0 .7 2; ∨ means 'or'. To be true, at least one side of the operator must be true.
+1.6 .125 0 .375 1; bottom .47; ...x is blue OR x is on the ground.
+
+1-6
+2 .25 0 .7 2; ⇒ means 'implies'. To be true, the right side must be true whenever the left side is true.
+1.6 .125 0 .375 1; bottom .47; ...if x is red, then x is on the ground.
+
+1-7
+2 .25 0 .575 2; ⇔ means 'if and only if'. To be true, the left and right sides must be equivalent.
+1.9 .125 0 .25 1; bottom .47; ...x is blue if and only if x is on the ground.
+2 .25 0 -.575 2; Note: P ⇔ Q can also be written as:           (P ⇒ Q) ∧ (Q ⇒ P).
+
+2-1
+2 .25 0 .575 2; Multiple quantifiers (∀x ∀y) can be used in the same sentence.
+2 .25 0 -.575 2; Sentence 1 reads: For all x and y, if x is red and y is blue, then x is above y.
+
+3-1
+2 .25 0 .575 2; Quantifiers can be mixed as well, here we have (∃x ∀y).
+2 .25 0 -.575 2; This reads: There exists an x such that for all y, x is red and x is not below y.
+
+3-2
+2 .25 0 .575 2; Be careful: the quantifier (∃x ∀y) is not the same as (∀x ∃y).
+2 .375 0 -.575 3; This reads: For each x, there exists a y such that x and y are adjacent, and x and y are not the same color.
+
+4-1
+2 .25 0 .575 2; Move the blocks into the beams to change their color.
+2 .25 0 -.575 2; They will revert to their original color when not hit by a beam.
+
+5-1
+2 .25 0 .575 2; Press the circle pad while grabbing a shape to ghost it. Press again to unghost it.
+2 .25 0 -.575 2; Ghosted shapes are considered to be removed from the world when evaluating statements.
+
+S-1
+2 .375 0 -.575 3; Move the shapes to make the statement true. Your moves are limited, but completing each stage awards three additional moves.
+
+S-2
+2 .375 0 -.575 3; After completing each stage, grab a block (A1/A2/B1/B2) to add the corresponding sentence to the world.
+
+S-3
+2 .375 0 -.575 3; After every other stage, a new shape will be added to the world. Clear as many stages as you can before you run out of moves.
+
+S-4
+2 .375 0 -.575 3; Try to select sentences that do not conflict with each other. If you are unable to complete a stage, pull the lever behind you.

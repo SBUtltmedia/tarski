@@ -1,0 +1,121 @@
+@font-face {
+    font-family: "FuturaBook";
+    src: url("fonts/FuturaPTBook.otf");
+}
+
+@font-face {
+    font-family: "FuturaMedium";
+    src: url("fonts/FuturaPTMedium.otf");
+}
+
+@font-face {
+    font-family: "FuturaDemi";
+    src: url("fonts/FuturaPTDemi.otf");
+}
+
+@font-face {
+    font-family: "FuturaBold";
+    src: url("fonts/FuturaPTBold.otf");
+}
+
+@font-face {
+    font-family: "FuturaHeavy";
+    src: url("fonts/FuturaPTHeavy.otf");
+}
+
+@font-face {
+    font-family: "Logic";
+    src: url("fonts/logic.otf");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#stage {
+    position: absolute;
+    background-color: #ffffff;
+}
+
+#sentences {
+    width: 90%;
+    height: 70%;
+    top: 10%;
+    left: 5%;
+    position: absolute;
+    background-color: #808080;
+}
+
+.sentenceBox {
+    width: 95%;
+    height: 12.5%;
+    left: 2.5%;
+    top: 10%;
+    position: absolute;
+}
+
+.sentenceNumber {
+    width: 8%;
+    height: 100%;
+    background-color: black;
+}
+
+.sentenceNumberText {
+    font-family: "FuturaDemi";
+    font-size: 1.25rem;
+    color: white;
+    text-align: center;
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+}
+
+.sentenceTextBox {
+    width: 90%;
+    top: 0%;
+    left: 10%;
+    height: 100%;
+    position: absolute;
+    background-color: white;
+}
+
+.sentenceText {
+    width: 80%;
+    left: 10%;
+    font-family: "Logic";
+    font-size: .65rem;
+    text-align: center;
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+}
+
+#titleText {
+    left: 5%;
+    top: 1.75%;
+    position: absolute;
+    font-family: "FuturaBold";
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #808080;
+}
+
+#levelSelect {
+    width: 20%;
+    height: 4%;
+    top: 2.75%;
+    left: 75%;
+    position: absolute;
+    border: none;
+    background-color: #c0c0c0;
+    outline: none;
+    font-family: "FuturaDemi";
+    font-size: .5rem;
+    text-transform: uppercase;
+}

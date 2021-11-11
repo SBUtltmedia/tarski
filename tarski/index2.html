@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tarski's Truth Machine</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js" integrity="sha512-/gO16YMp20RIqCZXZyvMlzALQqEoiDU0akshw25wFiXCRGl+0p/HPWkOd8HWFn6bnatGhxakGLfYhWaPPVQIyA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="aabb-collider.js"></script>
+    <script src="grab.js"></script>
+    <script src="utils.js"></script>
+    <script src="script.js"></script>
+    <script src="logic.js"></script>
+    <script src="permutator.js"></script>
+  <script src="progressive-controls.js"></script>
+</head>
+
+<body>
+    <a-scene>
+<a-entity rogressive-controls="objects:  .shape, .lever, .infChoiceBox"></a-entity>
+        <a-assets>
+            <a-mixin id="floorTile" scale=".2 .1 .2"></a-mixin>
+            <a-mixin id="futura" text="font: fonts/futura-demi-sdf.fnt; align: center"></a-mixin>
+            <a-mixin id="logicfont" text="font: fonts/logic.fnt; align: center"></a-mixin>
+            <a-mixin id="helptext" text="font: fonts/logic.fnt; align: center; color: #ffffff"></a-mixin>
+            <a-mixin id="paneltext" text="font: fonts/logic.fnt; align: center; color: #000000"></a-mixin>
+            <a-mixin id="laserWallGrid" material="color: #000000; opacity: .5"></a-mixin>
+            <a-mixin id="laserDevice" geometry="primitive: cone; radius-top: .7; radius-bottom: .85; height: .25; segments-height: 8; segments-radial: 8" material="color: #707070"></a-mixin>
+        </a-assets>
+        <a-sky color="#99e6ff"></a-sky>
+        <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0">
+        </a-entity>
+        <a-entity id="game" position="0 0 0">
+            <a-entity id="rigthHand" class="hand right-hand" hand-controls="right" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab position="0 0 0">
+                <a-box color="#000000" scale=".04 .005 .04" position="0 .025 .1"></a-box>
+                <a-box color="#444444" scale=".08 .04 .01" position="0 0.004 .1"></a-box>
+                <a-entity id="watchTime" mixin="futura" scale=".35 .35 .35" position="-0.005 .028 0.1" rotation="270 90 0" text="value: 12:59; color: #ffffff;"></a-entity>
+                <a-entity id="watchAMPM" mixin="futura" scale=".2 .2 .2" position="0.008 .028 .1" rotation="270 90 0" text="value: PM; color: #ffffff;"></a-entity>
+            </a-entity>
+            <a-entity id="leftHand" class="hand left-hand" hand-controls="left" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab position="0 0 0">
+                <a-entity id="ghostCounter" scale=".5 .5 .5" position=".03 0 0" visible="false">
+                    <a-box color="#000" scale=".2 .005 .15" position=".2 0 0"></a-box>
+                    <a-box color="#000" scale=".05 .005 .05" position=".1 0 0" rotation="0 45 0"></a-box>
+                    <a-entity id="ghostTitle" mixin="futura" scale=".5 .5 .5" position=".2 .005 -.045" rotation="270 0 0" text="value: GHOST SHAPES; color: #ffffff;"></a-entity>
+                    <a-entity id="ghostCountNumber" mixin="futura" scale="2 2 2" position="-.79 .005 .01" rotation="270 0 0" text="value: ; color: #ffffff; align: right"></a-entity>
+                    <a-entity id="ghostLimitNumber" mixin="futura" scale="1 1 1" position=".7 .005 .029" rotation="270 0 0" text="value: ; color: #ffffff; align: left"></a-entity>
+                </a-entity>
+            </a-entity>
+            <a-entity id="floor" position="-.5 .5 -.5"></a-entity>
+            <a-entity id="laserWall" position="0 1.2 0"></a-entity>
+            <a-entity id="lasers" position="0 1.2 0"></a-entity>
+            <a-entity id="centerMarker" scale="0 0 0">
+                <a-box scale=".0125 .0125 .40625" position="-.2 .6 0" color="#ffff66"></a-box>
+                <a-box scale=".0125 .0125 .40625" position=".2 .6 0" color="#ffff66"></a-box>
+                <a-box scale=".40625 .0125 .0125" position="0 .6 -.2" color="#ffff66"></a-box>
+                <a-box scale=".40625 .0125 .0125" position="0 .6 .2" color="#ffff66"></a-box>
+                <a-entity mixin="futura" scale="2 2 2" position="0 .601 0" rotation="270 0 0" text="value: CENTER; color: #ffff66; align: center"></a-entity>
+            </a-entity>
+            <a-entity id="cornerMarkers" scale="0 0 0"></a-entity>
+            <a-box color="#707070"></a-box>
+            <a-entity id="shapes"></a-entity>
+            <a-entity id="compass"></a-entity>
+            <a-entity id="machine" position="0 100 0" rotation="0 0 0">
+                <a-box color="#444" scale="3 2 2" position="0 1.5 -2"></a-box>
+                <a-entity id="board"></a-entity>
+                <a-entity id="tutorial" position="0 1.5 -1"></a-entity>
+                <a-cone id="horn0" color="#666" position="-1 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 15" scale="1 1 1"></a-cone>
+                <a-cone id="horn1" color="#666" position="0 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 0" scale="1 1 1"></a-cone>
+                <a-cone id="horn2" color="#666" position="1 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 -15" scale="1 1 1"></a-cone>
+                <a-entity id="armLeft" class="machineArm" rotation="0 0 0" position="0 0 0">
+                    <a-torus color="#666" arc="135" position="-1.5 1.5 -1" scale="1 1 1" rotation="270 90 0" material="side: double"></a-torus>
+                    <a-entity position="-2.2 1.5 -.3" rotation="0 45 0">
+                        <a-box color="#666" scale="1.5 1 .05"></a-box>
+                        <a-box id="levelPanel" color="#444" scale="1.4 .5 .05" position="0 0 .0005"></a-box>
+                        <a-entity scale="4 4 4" id="levelText" mixin="futura" position="0 .375 .026" text="value: LEVEL; color: #ffffff;"></a-entity>
+                        <a-entity id="levelCodeDisplay" mixin="futura" position="0 0.025 .026" scale="10 10 10" text="value: ?; color: #ffffff; align: center"></a-entity>
+                        <a-entity id="progressLights"></a-entity>
+                        <a-box id="progressLine" color="#ddd" scale="1.2 .015 .051" position="0 -.365 0"></a-box>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="armRight" class="machineArm" rotation="0 0 0" position="0 0 0">
+                    <a-torus color="#666" arc="135" position="1.5 1.5 -1" scale="1 1 1" rotation="90 90 0" material="side: double"></a-torus>
+                    <a-entity position="2.2 1.5 -.3" rotation="0 -45 0">
+                        <a-box color="#666" scale="1.5 1 .05"></a-box>
+                        <a-box id="evalPanel" color="#444" scale="1.4 .5 .05" position="0 0 .0005"></a-box>
+                        <a-entity scale="4 4 4" id="levelText" mixin="futura" position="0 .375 .026" text="value: EVALUATION; color: #ffffff;"></a-entity>
+                        <a-entity id="evalText" mixin="futura" position="0 0.025 .026" scale="10 10 10" text="value: ?; color: #ffffff; align: center"></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="titleText">
+                    <a-entity id="titleTextLine0" class="titleTextLine" mixin="futura" scale="8 8 8" position="0 2.2 -.99" text="value: TARSKI'S; color: #ffffff;"></a-entity>
+                    <a-entity id="titleTextLine1" class="titleTextLine" mixin="futura" scale="15 15 15" position="0 1.725 -.99" text="value: TRUTH; color: #ffffff;"></a-entity>
+                    <a-entity id="titleTextLine2" class="titleTextLine" mixin="futura" scale="8 8 8" position="0 1.2 -.99" text="value: MACHINE; color: #ffffff;"></a-entity>
+                    <a-entity id="titleTextLine3" class="titleTextLine" mixin="futura" scale="2 2 2" position="0 .675 -.99" text="value: Created by Jim Palmeri (@JimPalmeri) of the\nTeaching Learning Lab at Stony Brook University.; color: #808080;"></a-entity>
+                </a-entity>
+                <a-entity id="completeText" scale="0 0 0">
+                    <a-entity id="completeTextTitle" class="completeItem" mixin="futura" scale="7 7 7" position="0 2.25 -.99" text="value: LEVEL COMPLETE; color: #2cb674;"></a-entity>
+                    <a-entity position="-0.75 1.25 -.99">
+                        <a-entity id="completeLabel1" class="completeItem completeLabel" mixin="futura" scale="3.5 3.5 3.5" position="0 .5 0" text="value: CLEAR TIME; color: #a0a0a0;"></a-entity>
+                        <a-entity id="completeText1" class="completeItem completeText" mixin="futura" scale="7 7 7" position="0 .275 0" text="value: 0:00; color: #ffffff;"></a-entity>
+                        <a-entity id="completeBest1" class="completeItem completeBest" mixin="futura" scale="1.75 1.75 1.75" position="0 .05 0" text="value: ; color: #fffa79; align: center"></a-entity>
+                    </a-entity>
+                    <a-entity position="0.75 1.25 -.99">
+                        <a-entity id="completeLabel2" class="completeItem completeLabel" mixin="futura" scale="3.5 3.5 3.5" position="0 .5 0" text="value: MOVE COUNT; color: #a0a0a0;"></a-entity>
+                        <a-entity id="completeText2" class="completeItem completeText" mixin="futura" scale="7 7 7" position="0 .275 0" text="value: 0; color: #ffffff;"></a-entity>
+                        <a-entity id="completeBest2" class="completeItem completeBest" mixin="futura" scale="1.75 1.75 1.75" position="0 .05 0" text="value: ; color: #fffa79;"></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="infiniteEndText" scale="0 0 0">
+                    <a-entity id="infiniteEndTextTitle" class="infiniteEndItem" mixin="futura" scale="7 7 7" position="0 2.2 -.99" text="value: OUT OF MOVES; color: #2cb674; align: center"></a-entity>
+                    <a-entity position="0 1.25 -.99">
+                        <a-entity id="infiniteEndLabel1" class="infiniteEndItem completeLabel" mixin="futura" scale="4 4 4" position="0 .55 0" text="value: STAGES CLEARED; color: #a0a0a0; align: center"></a-entity>
+                        <a-entity id="infiniteEndText1" class="infiniteEndItem completeText" mixin="futura" scale="14 14 14" position="0 .2 0" text="value: 5; color: #ffffff; align: center"></a-entity>
+                        <a-entity id="infiniteEndBest1" class="infiniteEndItem completeBest" mixin="futura" scale="2 2 2" position="0 -.175 0" text="value: NEW PERSONAL BEST!; color: #fffa79; align: center"></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="subPanelLeft" position="-2.21 0.875 -.5" rotation="0 45 0">
+                    <a-entity id="subBoxLeft" position="2.5 0 0">
+                        <a-box color="#444" scale="2.5 .75 .3"></a-box>
+                        <a-box color="#444" scale="1 .25 .3" position="-.2 .4 0"></a-box>
+                        <a-entity mixin="futura" scale="2 2 2" position="-.2 0.45 .151" text="value: SENTENCE BANK A; color: #b0b0b0; align: center"></a-entity>
+                        <a-box color="#444" scale=".2 .2 .3" position="-1.35 .15 0"></a-box>
+                        <a-box color="#444" scale=".2 .2 .3" position="-1.35 -.15 0"></a-box>
+                        <a-entity mixin="futura" scale="3.5 3.5 3.5" position="-1.34 .16 .151" text="value: A1; color: #b0b0b0; align: center"></a-entity>
+                        <a-entity mixin="futura" scale="3.5 3.5 3.5" position="-1.34 -.14 .151" text="value: A2; color: #b0b0b0; align: center"></a-entity>
+                        <a-entity id="subSentencesLeft"></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="subPanelRight" position="2.21 0.875 -.5" rotation="0 -45 0">
+                    <a-entity id="subBoxRight" position="-2.5 0 0">
+                        <a-box color="#444" scale="2.5 .75 .3"></a-box>
+                        <a-box color="#444" scale="1 .25 .3" position=".2 .4 0"></a-box>
+                        <a-entity mixin="futura" scale="2 2 2" position=".2 0.45 .151" text="value: SENTENCE BANK B; color: #b0b0b0; align: center"></a-entity>
+                        <a-box color="#444" scale=".2 .2 .3" position="1.35 .15 0"></a-box>
+                        <a-box color="#444" scale=".2 .2 .3" position="1.35 -.15 0"></a-box>
+                        <a-entity mixin="futura" scale="3.5 3.5 3.5" position="1.36 .16 .151" text="value: B1; color: #b0b0b0; align: center"></a-entity>
+                        <a-entity mixin="futura" scale="3.5 3.5 3.5" position="1.36 -.14 .151" text="value: B2; color: #b0b0b0; align: center"></a-entity>
+                        <a-entity id="subSentencesRight"></a-entity>
+                    </a-entity>
+                </a-entity>
+                <a-entity id="movesLeftPanel" visible="false">
+                    <a-box color="#333" scale="1 .4 .05" position="0 2.2 -1"></a-box>
+                    <a-entity id="movesLeftTitle" mixin="futura" scale="2.5 2.5 2.5" position="0 2.325 -.97" text="value: MOVES LEFT; color: #a0a0a0; align: center"></a-entity>
+                    <a-entity id="movesLeftNumber" mixin="futura" scale="6.5 6.5 6.5" position="0 2.155 -.97" text="value: ; color: #ffffff; align: center"></a-entity>
+                </a-entity>
+            </a-entity>
+            <a-entity id="startLever" rotation="0 0 0">
+                <a-box color="#444" scale=".2 1.5 .2" position="0 .75 -1.2"></a-box>
+                <a-box color="#222" scale=".1 .5 .1" position="0 1.2 -1.145"></a-box>
+                <a-entity id="lever0" position="0 0 0">
+                    <a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>
+                    <a-sphere id="handle0" class="lever" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
+                </a-entity>
+                <a-sphere position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".25"></a-sphere>
+                <a-entity mixin="futura" scale=".8 .8 .8" position="0 1.65 -1.1" text="value: PULL\nTO\nSTART; color: #808080; align: center;"></a-entity>
+                <a-box color="#000" scale="1 .24 .01" position="0 2 -1.2"></a-box>
+                <a-entity mixin="futura" scale="1.5 1.5 1.5" position="0 2 -1.19" text="value: Note: Vive controllers are\nrequired to play this game!; color: #ffffff; align: center;"></a-entity>
+            </a-entity>
+            <a-entity id="exitLever" rotation="0 180 0" position="0 0 0.5" scale="0 0 0">
+                <a-box color="#444" scale=".2 1.5 .2" position="0 .75 -1.2"></a-box>
+                <a-box color="#222" scale=".1 .5 .1" position="0 1.2 -1.145"></a-box>
+                <a-entity id="lever7" position="0 0 0">
+                    <a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>
+                    <a-sphere id="handle7" class="lever" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
+                </a-entity>
+                <a-sphere position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".25"></a-sphere>
+                <a-entity mixin="futura" scale=".8 .8 .8" position="0 1.65 -1.1" text="value: EXIT\nTO\nMENU; color: #808080;"></a-entity>
+            </a-entity>
+            <a-entity id="levelSelect"></a-entity>
+            <a-entity id="infChoices" position="0 -2 0" visible="false">
+                <a-entity id="infChoice0" position="-1 1.25 .2">
+                    <a-box id="infChoiceBox0" class="infChoiceBox" scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: A1; color: #000000; align: center;"></a-entity>
+                </a-entity>
+                <a-entity id="infChoice1" position="-1 1.25 -.2">
+                    <a-box id="infChoiceBox1" class="infChoiceBox" scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: A2; color: #000000; align: center;"></a-entity>
+                </a-entity>
+                <a-entity id="infChoice2" position="1 1.25 -.2" rotation="0 180 0">
+                    <a-box id="infChoiceBox2" class="infChoiceBox" scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: B1; color: #000000; align: center;"></a-entity>
+                </a-entity>
+                <a-entity id="infChoice3" position="1 1.25 .2" rotation="0 180 0">
+                    <a-box id="infChoiceBox3" class="infChoiceBox" scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: B2; color: #000000; align: center;"></a-entity>
+                </a-entity>
+            </a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>

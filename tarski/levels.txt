@@ -1,0 +1,205 @@
+1-1
+lgc111 lgc114 lgc411 lgc414
+@x OnGround(x)
+
+1-2
+lbc101 lbc104 lbc401 lbc404
+@x ~OnGround(x)
+
+1-3
+lrc121 lrc124 lrc421 lrc424
+#x OnGround(x)
+
+1-4
+lrc131 lbc134 lbc431 lrc434
+#x (Red(x)&OnGround(x))
+#x (Blue(x)&OnGround(x))
+
+1-5
+lgc121 lbc124 lbc421 lgc424
+@x (Blue(x)|OnGround(x))
+#x (Blue(x)&OnGround(x))
+
+1-6
+lrc121 lbc104 lbc421 lrc404
+@x (Red(x)>OnGround(x))
+@x (Blue(x)>~OnGround(x))
+
+1-7
+lgc121 lbc104 lbc421 lgc404 lrc122 lrc403
+@x (Blue(x)=OnGround(x))
+
+2-1
+lrc131 lbc421 lbc414 lrc104
+@x @y ((Red(x)&Blue(y))>Above(x,y))
+#x OnGround(x)
+
+2-2
+lbc101 lbc201 lgc104 lgc204 lrc402 lrc403
+@x @y ((Red(x)&Blue(y))>Below(x,y))
+@x @y ((Green(x)&Blue(y))>Above(x,y))
+
+2-3
+lgc102 lbc112 lrc122 lrc402 lgc412 lbc422
+@x @y (SameColor(x,y)>~Above(x,y))
+@x ~OnGround(x)
+
+2-4
+lrc101 lgc103 lbc201 lbc403 lgc204 lrc404
+#x #y ((Red(x)&Green(y))&Adjacent(x,y))
+#x #y ((Blue(x)&Green(y))&Adjacent(x,y))
+@x @y (SameColor(x,y)>~Above(x,y))
+
+2-5
+lgc101 lrc401 lgc103 lbc204 lbc304 lrc403
+@x @y (NorthOf(x,y)>(Red(x)&~Red(y)))
+@x @y ((Blue(x)&Green(y))>WestOf(x,y))
+@x OnGround(x)
+
+2-6
+lrc102 lbc202 lbc212 lgc302 lgc312 lgc322 lgc332
+@x @y ((Red(x)&~Red(y))>Adjacent(x,y))
+#x (Blue(x)&OnGround(x))
+
+2-7
+lrc102 lgc202 lbc302 lrc203 lgc303 lbc403
+@x @y (NorthOf(x,y)=WestOf(x,y))
+@x @y (WestOf(x,y)=Above(x,y))
+@x @y ((Red(x)&Blue(y))>EastOf(x,y))
+@x @y ((Red(x)&Green(y))>Below(x,y))
+
+3-1
+lrc101 lgc411 lbc424
+#x @y (Red(x)&~Below(x,y))
+
+3-2
+lbc000 lgc200 lgc210 lrc400 lrc410 lrc420
+@x #y (Adjacent(x,y)&~SameColor(x,y))
+
+3-3
+src000 mrc200 lrc400 lgc002 sgc202 mgc402 mbc004 lbc204 sbc404
+@x @y (NorthOf(x,y)=Smaller(x,y))
+@x @y (WestOf(x,y)=Larger(x,y))
+
+3-4
+lrc013 mrc012 src011 lgc210 mgc310 sgc410 lbc512 mbc513 sbc514
+@x @y @z ((Smaller(x,y)&Smaller(y,z))>OnGround(y))
+#x #y #z ((Adjacent(x,y)&Adjacent(y,z))&(Above(x,y)&Above(y,z)))
+
+3-5
+src101 lbc201 mbc301 mgc401 mgc402 lrc403 sbc404 mbc304 sgc204 mbc104 lgc103 mgc102
+@x InCenter(x)
+@x @y ~Adjacent(x,y)
+@x @y ((Red(x)&~Red(y))>Above(x,y))
+@x @y (SouthOf(x,y)>~Smaller(x,y))
+@x @y (EastOf(x,y)>~Smaller(x,y))
+
+3-6
+mrc002 src012 src102 mbc202 sbc212 sbc302 lbc312 lgc412 mgc512 lgc502
+@x #y (SameColor(x,y)&InCorner(y))
+@x #y (Adjacent(x,y)&~SameSize(x,y))
+@x @y (Adjacent(x,y)>~SameSize(x,y))
+@x @y ((Red(x)&Blue(y))>Above(x,y))
+@x @y ((Blue(x)&Green(y))>Above(x,y))
+
+3-7
+mrc101 mgc201 mbc301 mrc401 mgc402 mbc403 mrc404 mgc304 mbc204 mrc104 mgc103 mbc102
+@x @y #z (Adjacent(x,z)&SameColor(y,z))
+
+4-1
+lrc104 lrd204 lrc304 lrd404 !b21 !g31
+@x (Cube(x)>Blue(x))
+@x (Dodec(x)>Green(x))
+
+4-2
+lrt004 lrc104 lrd204 lrt304 lrc404 lrd504 !g11 !b21 !g31 !b41
+@x @y (SameShape(x,y)=SameColor(x,y))
+@x @y (~Equals(x,y)>(Above(x,y)|Below(x,y)))
+#x (Cube(x)&OnGround(x))
+
+4-3
+lbc101 lbc201 lbc301 lbc401 lrc102 lrc202 lrc302 lrc402 lbc103 lbc203 lbc303 lbc403 !g41 !g14 !r32 !r34 !b23 !b21
+@x ~Red(x)
+#x #y ((Green(x)&Green(y))&~Equals(x,y))
+@x #y #z ((Adjacent(x,y)&Adjacent(x,z))&~Equals(y,z))
+@x @y ~WestOf(x,y)
+
+4-4
+mgc201 mbt301 mgd402 mbt403 mgd304 mbc204 mgt103 mbd102 !r42 !r43 !r52 !r53
+@x ~Red(x)
+@x ~OnGround(x)
+@x InCenter(x)
+@x @y @z ((Adjacent(x,y)&Adjacent(y,z))>SameShape(x,z))
+
+4-5
+mbc004 mgc104 lbc204 lgc304 mbc404 mrc504 !r01 !r04
+@x @y (Larger(x,y)>NorthOf(x,y))
+@x #y Adjacent(x,y)
+@x @y (Adjacent(x,y)>(Red(x)|Red(y)))
+@x @y (Adjacent(x,y)>(InCenter(x)|InCenter(y)))
+@x @y @z ((Adjacent(x,y)&Adjacent(x,z))>Equals(y,z))
+
+4-6
+lrd101 lgc201 lbc301 lrd401 lgc402 lbc403 lrd404 lgd304 lbd204 lrc104 lgd103 lbc102 !r01 !r04
+@x (~InCenter(x)&~InCorner(x))
+@x (Cube(x)=OnGround(x))
+@x #y (Adjacent(x,y)&SameColor(x,y))
+@x @y ((~Equals(x,y)&SameShape(x,y))>(NorthOf(x,y)|SouthOf(x,y)))
+@x @y ((~Equals(x,y)&SameShape(x,y))>(WestOf(x,y)|EastOf(x,y)))
+
+4-7
+lrd202 lgd222 mbc232 mgc332 mgt342 mrd352 srt252 sbt152 !r02
+@x (InCorner(x)|InCenter(x))
+@x OnGround(x)
+@x @y @z ((Adjacent(x,y)&Adjacent(y,z))>SameColor(x,z))
+@x @y (Smaller(x,y)>(SouthOf(x,y)|Dodec(y)))
+@x @y (Smaller(x,y)>(WestOf(x,y)|Cube(y)))
+
+5-1
+lrc103 lbc203 lbc303 lrc403 ?2
+@x Blue(x)
+
+5-2
+mrc101 lbt202 lbt303 mgc404 lgd111 mgt212 lgc313 lgt414 ?2
+@x @y @z (Red(x)>((Cube(y)&Dodec(z))>~Smaller(y,z)))
+@x @y @z (Blue(x)>((Tetra(y)&Cube(z))>~Smaller(y,z)))
+
+5-3
+lrc352 lrc452 lrc542 lrc532 lyc522 lyc512 loc402 loc302 loc202 lpc102 lgc012 lgc022 lrc032 lrc042 lrc152 lrc252 lbc242 lbc232 lbc222 lbc322 ?4
+@x InCenter(x)
+@x (OnGround(x)>Red(x))
+@x @y (Adjacent(x,y)>SameColor(x,y))
+
+5-4
+lrc102 sgc202 sgc302 lpc402 mrc103 lyc203 moc303 mpc403 src104 myc204 moc304 lpc404 !b00 ?4
+@x OnGround(x)
+@x ~Blue(x)
+@x @y (SameColor(x,y)=(Equals(x,y)|Adjacent(x,y)))
+@x @y (EastOf(x,y)=Larger(x,y))
+
+5-5
+lgd101 mgt201 mpd301 mbc401 lpd402 mrc403 srt404 sgt304 lrc204 sgd104 lrd103 mbt102 ?2
+@x InCenter(x)
+@x #y #z ((Adjacent(x,y)&Adjacent(x,z))&~Equals(y,z))
+@x @y ((Adjacent(x,y)&~SameColor(x,y))>(SameShape(x,y)&SameSize(x,y)))
+@x @y ((Adjacent(x,y)&~SameShape(x,y))>(SameSize(x,y)&SameColor(x,y)))
+@x @y ((Adjacent(x,y)&~SameSize(x,y))>(SameColor(x,y)&SameShape(x,y)))
+
+5-6
+lrd222 mrc122 mbd322 sgc022 srd132 srt112 sbc123 soc422 sgc332 sbt312 sgt323 ?3
+@x OnGround(x)
+#x #y Larger(x,y)
+@x @y (Adjacent(x,y)>~SameShape(x,y))
+@x #y @z (Adjacent(x,y)&(~Smaller(y,z)))
+#x @y #z (~Equals(x,y)>(Adjacent(y,z)&SameColor(y,z)))
+#x @y (Adjacent(x,y)>~SameColor(x,y))
+
+5-7
+mpt352 sot442 spd532 myc522 mpc412 lbt302 spc202 sbc112 mgc022 lbc032 mbd142 loc252 !r01 !r04 ?4
+@x ~Red(x)
+@x OnGround(x)
+@x (~InCorner(x)&~InCenter(x))
+@x @y ~Adjacent(x,y)
+@x @y (~Equals(x,y)>(SameColor(x,y)=(~WestOf(x,y)&~EastOf(x,y))))
+@x @y (Larger(x,y)>NorthOf(x,y))
+@x @y ((~Equals(x,y)&SameShape(x,y))>(NorthOf(x,y)|SouthOf(x,y)))

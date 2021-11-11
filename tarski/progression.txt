@@ -1,0 +1,40 @@
+1: Intro to Quantifiers
+1-1: for all, OnGround
+1-2: not
+1-3: there exists
+1-4: and
+1-5: or
+1-6: implies
+1-7: biconditional
+2: Multiple Quantifiers/Comparisons
+2-1: for all x for all y, Above
+2-2: Below
+2-3: SameColor
+2-4: Adjacent
+2-5: North/East/West/South
+2-6: (nothing new)
+2-7: (nothing new)
+3: Mixed Quantifiers
+3-1: there exists x for all y
+3-2: for all x there exists y
+3-3: Smaller/Larger
+3-4: triple for all, triple there exists
+3-5: InCenter
+3-6: InCorner, SameSize
+3-7: there exists x there exists y for all z
+4: Colored Lasers
+4-1: laser mechanic, Cube, Dodec
+4-2: SameShape
+4-3: (nothing new)
+4-4: (nothing new)
+4-5: (nothing new)
+4-6: (nothing new)
+4-7: (nothing new)
+5: Ghost Shapes
+5-1: ghost shapes
+5-2: (nothing new)
+5-3: (nothing new)
+5-4: (nothing new)
+5-5: (nothing new)
+5-6: (nothing new)
+5-7: (nothing new)
