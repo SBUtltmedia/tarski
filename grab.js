@@ -5,6 +5,7 @@
  * Determines if the entity is grabbed or released.
  * Updates its position to move along the controller.
  */
+delete AFRAME.components['grab']
 AFRAME.registerComponent('grab', {
     init: function () {
         
