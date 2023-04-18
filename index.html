@@ -7,14 +7,19 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script> 
   <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+ <!-- <script src="aframe-master.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.misc.min.js"></script>
-  <script src="https://unpkg.com/super-hands@^3.0.4/dist/super-hands.min.js"></script>
- 
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-super-hands-component@master/dist/super-hands.js"></script>
+  <script sc="https://unpkg.com/super-hands@^3.0.4/dist/super-hands.min.js"></script>
+-->
+<script src="https://aframe.io/aframe/examples/showcase/tracked-controls/components/aabb-collider.js"></script>
+<script rc="https://raw.githubusercontent.com/supermedium/superframe/master/components/aabb-collider/dist/aframe-aabb-collider-component.js"></script>
+<script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframe-event-set-component.min.js"></script> 
     <script src="utils.js"></script>
     <script src="script.js"></script>
     <script src="logic.js"></script>
     <script src="permutator.js"></script>
-    <script src="progressive-controls.js"></script>
+    <script srxc="progressive-controls.js"></script>
     <script src="grab.js"></script>
 
 
@@ -22,10 +27,16 @@
 
 <body>
     <a-scene      cursor="rayOrigin: mouse"
-    raycaster="objects:.shape, .lever, .infChoiceBox;" >>
+    raydcaster="objects:.shape, .lever, .infChoiceBox;" >
 
         <a-assets>
-            <a-mixin id="cube"
+                   <a-mixin id="pointer" raycaster="showLine: true; objects: .shape, .lever, .infChoiceBox"
+                  super-hands="colliderEvent: raycaster-intersection;
+                               colliderEventProperty: els;
+                               colliderEndEvent:raycaster-intersection-cleared;
+                               colliderEndEventProperty: clearedEls;">
+        </a-mixin>
+		<a-mixin id="cube"
             event-set__grab="material.color: #FFEF4F"
             event-set__grabend="material.color: #F2E646"
             event-set__hit="material.color: #F2E646"
@@ -48,21 +59,21 @@
         <!-- <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0">
         </a-entity> -->
         <a-entity>
-            <a-camera></a-camera>
-            <!-- <a-entity  sphere-collider="objects:.shape, .lever, .infChoiceBox;" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc" abb-collider="objects:.shape, .lever, .infChoiceBox;" grab></a-entity>
-            <a-entity sphere-collider="objects:.shape, .lever, .infChoiceBox;" hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc" abb-collider="objects:.shape, .lever, .infChoiceBox;" grab></a-entity> -->
-            <a-entity sphere-collider="objects:.shape, .lever, .infChoiceBox;" progressive-controls="objects:.shape, .lever, .infChoiceBox;"  abb-collider="objects:.shape, .lever, .infChoiceBox;"  ></a-entity>
+            <a-camera id="camera"></a-camera>
+            <a-entity sphere-collider="objects:.shape, .lever, .infChoiceBox;" clickable grab_off pzrogressive-controls="objects:.shape, .lever, .infChoiceBox;"  abb-collider="objects:.shape, .lever, .infChoiceBox;"  ></a-entity>
             <!-- <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: left"></a-entity>
             <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: right"></a-entity> -->
           </a-entity>
         <a-entity id="game" position="0 0 0">
-            <!-- <a-entity id="rigthHand" class="hand right-hand" hand-controls="hand: right" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab position="0 0 0">
+<a-entity class="hands" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc" aabb-collider="objects:.shape, .lever, .infChoiceBox;" grab></a-entity>
+<a-entity class="hands" hand-controls="hand: right; handModelStyle: lowPoly;color: #ffcccc" aabb-collider="objects:.shape, .lever, .infChoiceBox;" grab></a-entity>
+            <!-- <a-entity id="rigthHand" class="hand right-hand" hand-controls="hand: right" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab_off clickable  position="0 0 0">
                 <a-box color="#000000" scale=".04 .005 .04" position="0 .025 .1"></a-box>
                 <a-box color="#444444" scale=".08 .04 .01" position="0 0.004 .1"></a-box>
                 <a-entity id="watchTime" mixin="futura" scale=".35 .35 .35" position="-0.005 .028 0.1" rotation="270 90 0" text="value: 12:59; color: #ffffff;"></a-entity>
                 <a-entity id="watchAMPM" mixin="futura" scale=".2 .2 .2" position="0.008 .028 .1" rotation="270 90 0" text="value: PM; color: #ffffff;"></a-entity>
             </a-entity>
-            <a-entity id="leftHand" class="hand left-hand" hand-controls="hand: left" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab position="0 0 0">
+            <a-entity id="leftHand" class="hand left-hand" hand-controls="hand: left" aabb-collider="objects: .shape, .lever, .infChoiceBox" grab_off clickable  position="0 0 0">
                 <a-entity id="ghostCounter" scale=".5 .5 .5" position=".03 0 0" visible="false">
                     <a-box color="#000" scale=".2 .005 .15" position=".2 0 0"></a-box>
                     <a-box color="#000" scale=".05 .005 .05" position=".1 0 0" rotation="0 45 0"></a-box>
@@ -91,7 +102,7 @@
                 <a-entity id="tutorial" position="0 1.5 -1"></a-entity>
                 <a-cone id="horn0" color="#666" position="-1 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 15" scale="1 1 1"></a-cone>
                 <a-cone id="horn1" color="#666" position="0 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 0" scale="1 1 1"></a-cone>
-                <a-cone id="horn2" color="#666" position="1 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 -15" scale="1 1 1"></a-cone>
+                <a:-cone id="horn2" color="#666" position="1 3 -2" radius-bottom=".3" radius-top=".5" rotation="40 0 -15" scale="1 1 1"></a-cone>
                 <a-entity id="armLeft" class="machineArm" rotation="0 0 0" position="0 0 0">
                     <a-torus color="#666" arc="135" position="-1.5 1.5 -1" scale="1 1 1" rotation="270 90 0" material="side: double"></a-torus>
                     <a-entity position="-2.2 1.5 -.3" rotation="0 45 0">
@@ -174,7 +185,7 @@
                 <a-box color="#222" scale=".1 .5 .1" position="0 1.2 -1.145"></a-box>
                 <a-entity id="lever0" position="0 0 0">
                     <a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>
-                    <a-sphere id="handle0"  grab   class="lever" mixin="cube" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
+                    <a-sphere id="handle0"  grab_off clickable   endButtons class="lever" mixin="cube" mixin="cube" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
                 </a-entity>
                 <a-sphere position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".25"></a-sphere>
                 <a-entity mixin="futura" scale=".8 .8 .8" position="0 1.65 -1.1" text="value: PULL\nTO\nSTART; color: #808080; align: center;"></a-entity>
@@ -186,7 +197,7 @@
                 <a-box color="#222" scale=".1 .5 .1" position="0 1.2 -1.145"></a-box>
                 <a-entity id="lever7" position="0 0 0">
                     <a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>
-                    <a-sphere id="handle7" class="lever" grab color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
+                    <a-sphere id="handle7" class="lever" mixin="cube" grab_off clickable  color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>
                 </a-entity>
                 <a-sphere position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".25"></a-sphere>
                 <a-entity mixin="futura" scale=".8 .8 .8" position="0 1.65 -1.1" text="value: EXIT\nTO\nMENU; color: #808080;"></a-entity>
@@ -194,19 +205,19 @@
             <a-entity id="levelSelect" position="0 0.5 0"></a-entity>
             <a-entity id="infChoices" position="0 -2 0" visible="false">
                 <a-entity id="infChoice0" position="-1 1.25 .2">
-                    <a-box id="infChoiceBox0" class="infChoiceBox" grab scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-box id="infChoiceBox0" class="infChoiceBox" grab_off clickable  scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
                     <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: A1; color: #000000; align: center;"></a-entity>
                 </a-entity>
                 <a-entity id="infChoice1" position="-1 1.25 -.2">
-                    <a-box id="infChoiceBox1" class="infChoiceBox" grab scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-box id="infChoiceBox1" class="infChoiceBox" grab_off clickable  scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
                     <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: A2; color: #000000; align: center;"></a-entity>
                 </a-entity>
                 <a-entity id="infChoice2" position="1 1.25 -.2" rotation="0 180 0">
-                    <a-box id="infChoiceBox2" class="infChoiceBox" grab scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-box id="infChoiceBox2" class="infChoiceBox" grab_off clickable  scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
                     <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: B1; color: #000000; align: center;"></a-entity>
                 </a-entity>
                 <a-entity id="infChoice3" position="1 1.25 .2" rotation="0 180 0">
-                    <a-box id="infChoiceBox3" class="infChoiceBox" grab scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
+                    <a-box id="infChoiceBox3" class="infChoiceBox" grab_off clickable  scale=".2 .2 .2" color="#ffffff" opacity=".5"></a-box>
                     <a-entity mixin="futura" scale=".8 .8 .8" position="0.11 -.04 2" rotation="0 90 0" text="text: B2; color: #000000; align: center;"></a-entity>
                 </a-entity>
             </a-entity>

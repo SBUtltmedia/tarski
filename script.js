@@ -205,13 +205,13 @@ function loadShapes() {
         // Set type
         if (shape.type == "cube") {
             var size = .1 * shape.size;
-            toInsert += '<a-box id="shape' + i + '" class="shape" grab scale="' + size + ' ' + size + ' ' + size + '"></a-box>';
+            toInsert += '<a-box id="shape' + i + '" class="shape" grab_off clickable scale="' + size + ' ' + size + ' ' + size + '"></a-box>';
         } else if (shape.type == "dodec") {
             var radius = .065 * shape.size;
-            toInsert += '<a-dodecahedron id="shape' + i + '" grab class="shape" radius="' + radius + '"></a-dodecahedron>';
+            toInsert += '<a-dodecahedron id="shape' + i + '" grab_off clickable class="shape" radius="' + radius + '"></a-dodecahedron>';
         } else if (shape.type == "tet") {
             var radius = .075 * shape.size;
-            toInsert += '<a-tetrahedron id="shape' + i + '"grab  class="shape" radius="' + radius + '"></a-tetrahedron>';
+            toInsert += '<a-tetrahedron id="shape' + i + '" grab_off clickable  class="shape" radius="' + radius + '"></a-tetrahedron>';
         }
         // Set position
         prepareShapeEnter(i);
@@ -315,12 +315,16 @@ function shapeEnter(i) {
 }
 
 function disableHandControls() {
-    $(".hand").attr("aabb-collider", "objects: .lever, .infChoiceBox");
+ //   $(".hand").attr("aabb-collider", "objects: .lever, .infChoiceBox");
 }
 
 function updateHandControls() {
-    $(".hand").attr("aabb-collider", "objects: .shap");
-    $(".hand").attr("aabb-collider", "objects: .shape, .lever, .infChoiceBox");
+ $(".hands").each(function (){
+this.removeAttribute("aabb-collider");
+this.setAttribute("aabb-collider", "objects: .shape, .lever, .infChoiceBox"); 
+// $(".hands").attr("aabb-collider", "objects: .shape, .lever, .infChoiceBox");
+   // $(".hands").attr("grab", "true");
+})
 }
 
 function getCoordsFromGrid(x1, y1, z1) {
@@ -728,7 +732,7 @@ function makeLever(id) {
     $("#selectLever" + id).append('<a-box id="leverCrevice' + id + '" color="#222" scale=".1 .5 .1" position="0 1.2 -1.145"></a-box>');
     $("#selectLever" + id).append('<a-entity id="lever' + id + '" position="0 0 0"></a-entity>');
     $("#lever" + id).append('<a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>');
-    $("#lever" + id).append('<a-sphere id="handle' + id + '" grab class="lever" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>');
+    $("#lever" + id).append('<a-sphere id="handle' + id + '" grab_off mixin="cube" class="lever" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>');
     $("#selectLever" + id).append('<a-entity mixin="futura" scale="1.25 1.25 1.25" position="0 0.85 -1.09" text="value: ' + (id == 6 ? "LEVEL" : "LEVEL") + '; color: #808080;"></a-entity>');
     $("#selectLever" + id).append('<a-entity mixin="futura" scale="5 5 5" position="0 .72 -1.09" text="value: ' + (id == 6 ? "S" : id) + '; color: #c0c0c0;"></a-entity>');
     $("#selectLever" + id).append('<a-sphere id="selectLeverBall' + id + '" color="#000000" position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".5"></a-sphere>');
@@ -754,7 +758,8 @@ function makeLever(id) {
     $("#selectLever" + id).attr("position", "0 0 " + z);
     $("#selectLever" + id).attr("rotation", "-90 " + rot + " 0");
     $("#selectLever" + id).attr("scale", "0 0 0");
-    updateHandControls();
+  $("#selectLever" + id)[0].flushToDOM(true); 
+   updateHandControls();
 }
 
 // Show the level select screen
@@ -1452,13 +1457,13 @@ function addInfiniteShape(inAir) {
         // Set type
         if (newShape.type == "cube") {
             var size = .1 * newShape.size;
-            toInsert += '<a-box id="shape' + i + '" grab class="shape" scale="' + size + ' ' + size + ' ' + size + '"></a-box>';
+            toInsert += '<a-box id="shape' + i + '" grab_off clickable class="shape" scale="' + size + ' ' + size + ' ' + size + '"></a-box>';
         } else if (newShape.type == "dodec") {
             var radius = .065 * newShape.size;
-            toInsert += '<a-dodecahedron id="shape' + i + '" grab class="shape" radius="' + radius + '"></a-dodecahedron>';
+            toInsert += '<a-dodecahedron id="shape' + i + '" grab_off clickable class="shape" radius="' + radius + '"></a-dodecahedron>';
         } else if (newShape.type == "tet") {
             var radius = .075 * newShape.size;
-            toInsert += '<a-tetrahedron id="shape' + i + '"grab  class="shape" radius="' + radius + '"></a-tetrahedron>';
+            toInsert += '<a-tetrahedron id="shape' + i + '" grab_off clickable  class="shape" radius="' + radius + '"></a-tetrahedron>';
         }
         $("#shapes").append(toInsert);
         // Animate shape entrance

@@ -7,7 +7,7 @@
  */
 delete AFRAME.components['grab']
 AFRAME.registerComponent('grab', {
-    init: function () {
+/*    init: function () {
         
         this.GRABBED_STATE = 'grabbed';
         // Bind event handlers
@@ -18,11 +18,12 @@ AFRAME.registerComponent('grab', {
         //     );
         this.el.addEventListener('grab-start', this.onHit);
        this.el.addEventListener('grab-end', this.onGripOpen);
-        this.el.addEventListener('mouseleave', this.onGripOpen);
+       this.el.addEventListener('mouseleave', this.onGripOpen);
+       this.el.addEventListener('mouseup', this.onGripOpen);
        this.el.addEventListener('mouseenter', this.onHit);
-       this.hand=null
-        // this.el.addEventListener('hitstart', this.onHit);
-        // this.el.addEventListener('hitend', this.onGripOpen);
+       window.hand=null
+       this.el.addEventListener('hitstart', this.onHit);
+       this.el.addEventListener('hitend', this.onGripOpen);
        this.onGripOpen = this.onGripOpen.bind(this);
         this.onGripClose = this.onGripClose.bind(this);
         this.onThumbUp = this.onThumbUp.bind(this);
@@ -49,16 +50,49 @@ AFRAME.registerComponent('grab', {
 
     onGripClose: function (evt) {
         this.grabbing = true;
+	console.log(evt)
         delete this.previousPosition;
     },
+*/
+
+init: function () {
+    this.GRABBED_STATE = 'grabbed';
+    // Bind event handlers
+    this.onHit = this.onHit.bind(this);
+    this.tick = this.tick.bind(this);
+    this.onGripOpen = this.onGripOpen.bind(this);
+    this.onGripClose = this.onGripClose.bind(this);
+    this.currentPosition = new THREE.Vector3();
+  },
+
+  play: function () {
+    var el = this.el;
+    el.addEventListener('hit', this.onHit);
+    el.addEventListener('buttondown', this.onGripClose);
+    el.addEventListener('buttonup', this.onGripOpen);
+  },
+
+  pause: function () {
+    var el = this.el;
+    el.removeEventListener('hit', this.onHit);
+    el.addEventListener('buttondown', this.onGripClose);
+    el.addEventListener('buttonup', this.onGripOpen);
+  },
+
+  onGripClose: function (evt) {
+    if (this.grabbing) { return; }
+    this.grabbing = true;
+    this.pressedButtonId = evt.detail.id;
+    delete this.previousPosition;
+  },
+
 
     onGripOpen: function (evt) {
-        console.log(evt)
-        var hitEl = this.hitEl;
-
-        this.grabbing = false;
-        if (!hitEl) {
-            return;
+ var hitEl =window.hitEl;
+	this.grabbing = false;
+         if (!hitEl ) {
+        console.log(this.el)   
+	 return;
         }
         var cl = hitEl.getAttribute("class");
         if (cl.indexOf("shape") != -1) {
@@ -66,7 +100,8 @@ AFRAME.registerComponent('grab', {
             // Get position of the element to be dropped
             var hitElPos = hitEl.getAttribute("position");
             // Snap it to grid
-            var hitElGrid = getGridFromCoords(hitElPos.x, hitElPos.y, hitElPos.z);
+            console.log(hitElPos)
+	    var hitElGrid = getGridFromCoords(hitElPos.x, hitElPos.y, hitElPos.z);
             // Check if any other shape is occupying the same space
             var collideID = -1;
             for (var i = 0; i < shapes.length; i++) {
@@ -102,7 +137,7 @@ AFRAME.registerComponent('grab', {
             setTimeout(function () {
                 hitEl.setAttribute("position", hitElSnap);
             }, 100);
-            this.hitEl = undefined;
+            window.hitEl = undefined;
             totalMoves++;
             if (infiniteMode) {
                 infiniteMovesLeft--;
@@ -121,7 +156,7 @@ AFRAME.registerComponent('grab', {
                 // Select level
                 if (leverPos.y <= -.4) {
                     startLevel(id);
-                }
+		}
             } else if (id == 6) {
                 // Start infinite mode
                 if (leverPos.y <= -.4) {
@@ -144,44 +179,44 @@ AFRAME.registerComponent('grab', {
                 }
             }
             hitEl.removeState(this.GRABBED_STATE);
-            this.hitEl = undefined;
+            window.hitEl = undefined;
         } else if (cl.indexOf("infChoiceBox") != -1) {
             if (infiniteMode) {
                 var id = betterParseInt(hitEl.getAttribute("id"));
                 selectInfChoice(id);
             }
             hitEl.removeState(this.GRABBED_STATE);
-            this.hitEl = undefined;
+            window.hitEl = undefined;
         }
-        this.hitEl = undefined;
-        this.hand=undefined;
+        window.hitEl = undefined;
+        window.hand=undefined;
     },
 
     onHit: function (evt) {
-        console.log(evt)
         // var hitEl = document.getElementById(evt.target.id)
-       var hitEl = evt.detail.target
+       var hitEl = evt.detail.el
+       if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) { return; }
         // console.log(evt)
        // if(Math.random()>.9) 
         // If the element is already grabbed (it could be grabbed by another controller).
         // If the hand is not grabbing the element does not stick.
         // If we're already grabbing something you can't grab again.
-        // if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) {
+        // if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || window.hitEl) {
         //     return;
         // }
-        // hitEl.addState(this.GRABBED_STATE);
-        this.hand=evt.detail.hand
-        this.hitEl = hitEl;
-        console.log(this.hitEl)
+         hitEl.addState(this.GRABBED_STATE);
+        window.hand=evt.detail.hand
+        window.hitEl = hitEl;
+        console.log(window.hitEl)
     },
 
     onThumbUp: function (evt) {
-        // this.hitEl = undefined;
+        // window.hitEl = undefined;
     },
 
     onThumbDown: function (evt) {
         // Circle pad pressed.
-        var hitEl = this.hitEl;
+        var hitEl = window.hitEl;
         if (hitEl && this.grabbing) {
             var id = betterParseInt(hitEl.getAttribute("id"));
             // Invert inWorld property of the shape
@@ -212,8 +247,9 @@ AFRAME.registerComponent('grab', {
     },
 
     tick: function () {
-        var hitEl = this.hitEl;
-        // console.log(this)
+      
+
+	var hitEl = window.hitEl;
         var position;
         if (!hitEl) {
             
@@ -225,7 +261,6 @@ AFRAME.registerComponent('grab', {
 
             if (cl.indexOf("lever") != -1) {
 
-                // console.log(hitEl)
 
                 var id = betterParseInt(hitEl.getAttribute("id"));
                 // console.log(this.deltaPosition.y)
@@ -253,10 +288,27 @@ AFRAME.registerComponent('grab', {
             }
         }
     },
-
+  updateDelta: function () {
+    var currentPosition = this.currentPosition;
+    this.el.object3D.updateMatrixWorld();
+    currentPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+    if (!this.previousPosition) {
+      this.previousPosition = new THREE.Vector3();
+      this.previousPosition.copy(currentPosition);
+    }
+    var previousPosition = this.previousPosition;
+    var deltaPosition = {
+      x: currentPosition.x - previousPosition.x,
+      y: currentPosition.y - previousPosition.y,
+      z: currentPosition.z - previousPosition.z
+    };
+    this.previousPosition.copy(currentPosition);
+    this.deltaPosition = deltaPosition;
+  }
+/*
     updateDelta: function () {
         var grabPos = new THREE.Vector3()
-        var currentPosition = this.hand.object3D.getWorldPosition(grabPos)
+	 var currentPosition = window.hand.object3D.getWorldPosition(grabPos)
         // console.log(currentPosition)
         var previousPosition = this.previousPosition || currentPosition;
         var deltaPosition = {
@@ -267,4 +319,5 @@ AFRAME.registerComponent('grab', {
         this.previousPosition = currentPosition;
         this.deltaPosition = deltaPosition;
     }
+*/
 });
