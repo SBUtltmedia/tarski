@@ -56,31 +56,37 @@ AFRAME.registerComponent('grab', {
 */
 
 init: function () {
+//     startLevel(2);
+    this.grabbing=false;
     this.GRABBED_STATE = 'grabbed';
     // Bind event handlers
-    this.onHit = this.onHit.bind(this);
-    this.tick = this.tick.bind(this);
+    this.hitstart = this.onHit.bind(this);
+    //this.tick = this.tick.bind(this);
     this.onGripOpen = this.onGripOpen.bind(this);
     this.onGripClose = this.onGripClose.bind(this);
-    this.currentPosition = new THREE.Vector3();
+    //this.currentPosition = new THREE.Vector3();
   },
 
   play: function () {
     var el = this.el;
-    el.addEventListener('hit', this.onHit);
+ //   el.addEventListener('mouseenter', this.onHit);
+    el.addEventListener('hitstart', this.onHit);
     el.addEventListener('buttondown', this.onGripClose);
+    el.addEventListener('mousedown', this.onGripClose);
     el.addEventListener('buttonup', this.onGripOpen);
+    el.addEventListener('mouseup', this.onGripOpen);
   },
 
   pause: function () {
     var el = this.el;
     el.removeEventListener('hit', this.onHit);
-    el.addEventListener('buttondown', this.onGripClose);
+    el.addEventListener('buttondown', this.onGipClose);
     el.addEventListener('buttonup', this.onGripOpen);
   },
 
   onGripClose: function (evt) {
-    if (this.grabbing) { return; }
+   console.log(this) 
+   if (this.grabbing) { return; }
     this.grabbing = true;
     this.pressedButtonId = evt.detail.id;
     delete this.previousPosition;
@@ -88,14 +94,16 @@ init: function () {
 
 
     onGripOpen: function (evt) {
- var hitEl =window.hitEl;
+	
+        var hitEl =window.hitEl;
 	this.grabbing = false;
          if (!hitEl ) {
-        console.log(this.el)   
+        console.log(window.hitEl)   
 	 return;
         }
         var cl = hitEl.getAttribute("class");
-        if (cl.indexOf("shape") != -1) {
+        //console.lot(cl)
+	if (cl.indexOf("shape") != -1) {
             hitEl.removeState(this.GRABBED_STATE);
             // Get position of the element to be dropped
             var hitElPos = hitEl.getAttribute("position");
@@ -137,7 +145,6 @@ init: function () {
             setTimeout(function () {
                 hitEl.setAttribute("position", hitElSnap);
             }, 100);
-            window.hitEl = undefined;
             totalMoves++;
             if (infiniteMode) {
                 infiniteMovesLeft--;
@@ -178,36 +185,28 @@ init: function () {
                     }
                 }
             }
-            hitEl.removeState(this.GRABBED_STATE);
-            window.hitEl = undefined;
         } else if (cl.indexOf("infChoiceBox") != -1) {
             if (infiniteMode) {
                 var id = betterParseInt(hitEl.getAttribute("id"));
                 selectInfChoice(id);
             }
-            hitEl.removeState(this.GRABBED_STATE);
-            window.hitEl = undefined;
         }
-        window.hitEl = undefined;
-        window.hand=undefined;
+	this.grabbing=false;
+        hitEl.removeState(this.GRABBED_STATE);
+
+	//window.hitEl = undefined;
+        //window.hand=undefined;
     },
 
     onHit: function (evt) {
         // var hitEl = document.getElementById(evt.target.id)
-       var hitEl = evt.detail.el
-       if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) { return; }
-        // console.log(evt)
-       // if(Math.random()>.9) 
-        // If the element is already grabbed (it could be grabbed by another controller).
-        // If the hand is not grabbing the element does not stick.
-        // If we're already grabbing something you can't grab again.
-        // if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || window.hitEl) {
-        //     return;
-        // }
-         hitEl.addState(this.GRABBED_STATE);
-        window.hand=evt.detail.hand
+       //var hitEl = evt.detail.el
+        if(!this.grabbing){
+        var hitEl = evt.target.components["aabb-collider"]["intersectedEls"][0]
         window.hitEl = hitEl;
-        console.log(window.hitEl)
+        window.hand=evt.srcElement
+        hitEl.addState(this.GRABBED_STATE);
+}
     },
 
     onThumbUp: function (evt) {
@@ -251,8 +250,8 @@ init: function () {
 
 	var hitEl = window.hitEl;
         var position;
-        if (!hitEl) {
-            
+        if (!hitEl || !this.grabbing) {
+           window.hitEl=undefined;
             return;
         }
         this.updateDelta();
@@ -278,17 +277,24 @@ init: function () {
                 }
             } else if (cl.indexOf("shape") != -1) {
                 position = hitEl.getAttribute('position');
+ 		var currentPosition = window.hand.object3D.getWorldPosition(new THREE.Vector3())
                 hitEl.setAttribute('position', {
+                    x: currentPosition.x,
+                    y:currentPosition.y,
+                    z: currentPosition.z
+                 });
+		/*hitEl.setAttribute('position', {
                     x: position.x + this.deltaPosition.x,
                     y: position.y + this.deltaPosition.y,
                     z: position.z + this.deltaPosition.z
-                });
+                });*/
+
             } else {
 
             }
         }
     },
-  updateDelta: function () {
+/*  updateDelta: function () {
     var currentPosition = this.currentPosition;
     this.el.object3D.updateMatrixWorld();
     currentPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
@@ -305,7 +311,7 @@ init: function () {
     this.previousPosition.copy(currentPosition);
     this.deltaPosition = deltaPosition;
   }
-/*
+*/
     updateDelta: function () {
         var grabPos = new THREE.Vector3()
 	 var currentPosition = window.hand.object3D.getWorldPosition(grabPos)
@@ -316,8 +322,7 @@ init: function () {
             y: currentPosition.y - previousPosition.y,
             z: currentPosition.z - previousPosition.z
         };
-        this.previousPosition = currentPosition;
+        this.previousPosition = Object.assign({},currentPosition);
         this.deltaPosition = deltaPosition;
     }
-*/
 });
