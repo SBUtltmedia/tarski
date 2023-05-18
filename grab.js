@@ -7,60 +7,12 @@
  */
 delete AFRAME.components['grab']
 AFRAME.registerComponent('grab', {
-/*    init: function () {
-        
-        this.GRABBED_STATE = 'grabbed';
-        // Bind event handlers
-       this.onHit = this.onHit.bind(this);
-        // this.el.addEventListener('hit', function(e){
-          
-        //     this.onHit(e)}
-        //     );
-        this.el.addEventListener('grab-start', this.onHit);
-       this.el.addEventListener('grab-end', this.onGripOpen);
-       this.el.addEventListener('mouseleave', this.onGripOpen);
-       this.el.addEventListener('mouseup', this.onGripOpen);
-       this.el.addEventListener('mouseenter', this.onHit);
-       window.hand=null
-       this.el.addEventListener('hitstart', this.onHit);
-       this.el.addEventListener('hitend', this.onGripOpen);
-       this.onGripOpen = this.onGripOpen.bind(this);
-        this.onGripClose = this.onGripClose.bind(this);
-        this.onThumbUp = this.onThumbUp.bind(this);
-        this.onThumbDown = this.onThumbDown.bind(this);
-    },
-
-    play: function () {
-        var el = this.el;
-      
-        el.addEventListener('trackpaddown', this.onThumbUp);
-        el.addEventListener('trackpadup', this.onThumbDown);
-        el.addEventListener('triggerdown', this.onGripClose);
-        el.addEventListener('triggerup', this.onGripOpen);
-    },
-
-    pause: function () {
-        var el = this.el;
-        el.removeEventListener('hit', this.onHit);
-        el.removeEventListener('trackpaddown', this.onThumbUp);
-        el.removeEventListener('trackpadup', this.onThumbDown);
-        el.removeEventListener('triggerdown', this.onGripClose);
-        el.removeEventListener('triggerup', this.onGripOpen);
-    },
-
-    onGripClose: function (evt) {
-        this.grabbing = true;
-	console.log(evt)
-        delete this.previousPosition;
-    },
-*/
 
 init: function () {
 //     startLevel(2);
+    this.dragPlane=null; 
     this.grabbing=false;
-    this.GRABBED_STATE = 'grabbed';
     // Bind event handlers
-    this.hitstart = this.onHit.bind(this);
     //this.tick = this.tick.bind(this);
     this.onGripOpen = this.onGripOpen.bind(this);
     this.onGripClose = this.onGripClose.bind(this);
@@ -70,7 +22,6 @@ init: function () {
   play: function () {
     var el = this.el;
  //   el.addEventListener('mouseenter', this.onHit);
-    el.addEventListener('hitstart', this.onHit);
     el.addEventListener('buttondown', this.onGripClose);
     el.addEventListener('mousedown', this.onGripClose);
     el.addEventListener('buttonup', this.onGripOpen);
@@ -79,36 +30,46 @@ init: function () {
 
   pause: function () {
     var el = this.el;
-    el.removeEventListener('hit', this.onHit);
     el.addEventListener('buttondown', this.onGipClose);
     el.addEventListener('buttonup', this.onGripOpen);
   },
 
   onGripClose: function (evt) {
-   console.log(this) 
-   if (this.grabbing) { return; }
-    this.grabbing = true;
-    this.pressedButtonId = evt.detail.id;
-    delete this.previousPosition;
+    if (this.grabbing) { return; }
+	if(evt.type=="mousedown"){
+	this.hitEl= evt.detail.intersectedEl;
+	}
+	else{
+        this.hitEl = evt.target.components["aabb-collider"]["intersectedEls"][0]
+	}   
+ if (!this.hitEl) {return}
+	var sceneEl = document.querySelector('a-scene');
+	this.dragPlane = document.createElement('a-plane');
+        this.dragPlane.setAttribute('look-at','[camera]')
+	this.dragPlane.setAttribute('id','dragPlane')
+	 this.dragPlane.setAttribute('opacity',0)
+	this.dragPlane.setAttribute('position',this.hitEl.getAttribute('position'))
+	sceneEl.appendChild(this.dragPlane);
+ 	var cursor = document.querySelector('[cursor]')
+	cursor.components.raycaster.refreshObjects();
+	this.hand=evt.srcElement
+    	this.grabbing = true;
   },
 
 
     onGripOpen: function (evt) {
-	
-        var hitEl =window.hitEl;
+	var hitEl = this.hitEl
 	this.grabbing = false;
-         if (!hitEl ) {
-        console.log(window.hitEl)   
+         if (!this.hitEl) {
 	 return;
         }
-        var cl = hitEl.getAttribute("class");
-        //console.lot(cl)
+        
+	if(this.hitEl.hasAttribute("look-at")){return}	
+	var cl = this.hitEl.getAttribute("class");
 	if (cl.indexOf("shape") != -1) {
-            hitEl.removeState(this.GRABBED_STATE);
             // Get position of the element to be dropped
-            var hitElPos = hitEl.getAttribute("position");
+            var hitElPos = this.hitEl.getAttribute("position");
             // Snap it to grid
-            console.log(hitElPos)
 	    var hitElGrid = getGridFromCoords(hitElPos.x, hitElPos.y, hitElPos.z);
             // Check if any other shape is occupying the same space
             var collideID = -1;
@@ -118,7 +79,7 @@ init: function () {
                     collideID = i;
                 }
             }
-            var id = betterParseInt(hitEl.id);
+            var id = betterParseInt(this.hitEl.id);
             // If no shape is occupying the new space, move it to that space (otherwise swap it with the hit shape)
             var temp = {
                 x: shapes[id].x,
@@ -133,7 +94,7 @@ init: function () {
                 shapes[collideID].z = temp.z;
                 var collideElSnap = getCoordsFromGrid(shapes[collideID].x, shapes[collideID].y, shapes[collideID].z);
                 animatePos(collideEl, collideElPos, collideElSnap, 100);
-                setTimeout(function () {
+                setTimeout( function() {
                     hitEl.setAttribute("position", collideElSnap);
                 }, 100);
             }
@@ -141,8 +102,8 @@ init: function () {
             shapes[id].y = hitElGrid.y;
             shapes[id].z = hitElGrid.z;
             var hitElSnap = getCoordsFromGrid(shapes[id].x, shapes[id].y, shapes[id].z);
-            animatePos(hitEl, hitElPos, hitElSnap, 100);
-            setTimeout(function () {
+            animatePos(this.hitEl, hitElPos, hitElSnap, 100);
+            setTimeout( function () {
                 hitEl.setAttribute("position", hitElSnap);
             }, 100);
             totalMoves++;
@@ -152,7 +113,7 @@ init: function () {
             }
             evaluateWorld();
         } else if (cl.indexOf("lever") != -1) {
-            var id = betterParseInt(hitEl.getAttribute("id"));
+            var id = betterParseInt(this.hitEl.getAttribute("id"));
             var leverPos = $("#lever" + id).attr("position");
             if (id == 0) {
                 // Start game lever
@@ -187,35 +148,25 @@ init: function () {
             }
         } else if (cl.indexOf("infChoiceBox") != -1) {
             if (infiniteMode) {
-                var id = betterParseInt(hitEl.getAttribute("id"));
+                var id = betterParseInt(this.hitEl.getAttribute("id"));
                 selectInfChoice(id);
             }
         }
 	this.grabbing=false;
-        hitEl.removeState(this.GRABBED_STATE);
-
-	//window.hitEl = undefined;
-        //window.hand=undefined;
+	if(this.dragPlane){
+	this.dragPlane.parentNode.removeChild(this.dragPlane)
+	this.dragPlane=null;
+	}
+	//this.hitEl = undefined;
+        //this.hand=undefined;
     },
-
-    onHit: function (evt) {
-        // var hitEl = document.getElementById(evt.target.id)
-       //var hitEl = evt.detail.el
-        if(!this.grabbing){
-        var hitEl = evt.target.components["aabb-collider"]["intersectedEls"][0]
-        window.hitEl = hitEl;
-        window.hand=evt.srcElement
-        hitEl.addState(this.GRABBED_STATE);
-}
-    },
-
     onThumbUp: function (evt) {
-        // window.hitEl = undefined;
+        // this.hitEl = undefined;
     },
 
     onThumbDown: function (evt) {
         // Circle pad pressed.
-        var hitEl = window.hitEl;
+        var hitEl = this.hitEl;
         if (hitEl && this.grabbing) {
             var id = betterParseInt(hitEl.getAttribute("id"));
             // Invert inWorld property of the shape
@@ -248,10 +199,10 @@ init: function () {
     tick: function () {
       
 
-	var hitEl = window.hitEl;
-        var position;
+	var hitEl = this.hitEl;
+	var position;
         if (!hitEl || !this.grabbing) {
-           window.hitEl=undefined;
+           this.hitEl=undefined;
             return;
         }
         this.updateDelta();
@@ -277,8 +228,27 @@ init: function () {
                 }
             } else if (cl.indexOf("shape") != -1) {
                 position = hitEl.getAttribute('position');
- 		var currentPosition = window.hand.object3D.getWorldPosition(new THREE.Vector3())
-                hitEl.setAttribute('position', {
+ 		        if (this.hand.hasAttribute("cursor")){
+        		var cursor = document.querySelector('[cursor]');
+        	var mousePosition = cursor.components.raycaster.getIntersection(this.dragPlane);
+		if(!mousePosition){return}
+		this.dragPlane.setAttribute('position',this.hitEl.getAttribute('position'))
+		console.log(this.dragPlane)
+		var currentPosition= mousePosition.point
+		console.log(mousePosition)
+		/*
+		{
+                    x: position.x + this.deltaPosition.x*.2,
+                    y: position.y + this.deltaPosition.y*.2,
+                    z: position.z + this.deltaPosition.z*.2
+                }
+		*/
+		//currentPosition.z=  (hitEl.getAttribute('position').z+mousePosition.point.z)/2;
+		}
+	else{
+		var currentPosition = this.hand.object3D.getWorldPosition(new THREE.Vector3())
+        }     
+	   hitEl.setAttribute('position', {
                     x: currentPosition.x,
                     y:currentPosition.y,
                     z: currentPosition.z
@@ -314,15 +284,25 @@ init: function () {
 */
     updateDelta: function () {
         var grabPos = new THREE.Vector3()
-	 var currentPosition = window.hand.object3D.getWorldPosition(grabPos)
-        // console.log(currentPosition)
+	if (this.hand.hasAttribute("cursor")){
+	var cursor = document.querySelector('[cursor]');
+	var elToWatch = this.hitEl;
+	var intersection = cursor.components.raycaster.getIntersection(elToWatch);
+	if (!intersection){return}
+	var currentPosition = intersection.point;
+	}
+	else{
+	 var currentPosition = this.hand.object3D.getWorldPosition(grabPos)
+        }
+	// console.log(currentPosition)
         var previousPosition = this.previousPosition || currentPosition;
         var deltaPosition = {
-            x: currentPosition.x - previousPosition.x,
-            y: currentPosition.y - previousPosition.y,
-            z: currentPosition.z - previousPosition.z
-        };
-        this.previousPosition = Object.assign({},currentPosition);
+      x: currentPosition.x - previousPosition.x,
+      y: currentPosition.y - previousPosition.y,
+      z: currentPosition.z - previousPosition.z
+    };
+
+	this.previousPosition = Object.assign({},currentPosition);
         this.deltaPosition = deltaPosition;
     }
 });

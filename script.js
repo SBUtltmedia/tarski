@@ -192,7 +192,7 @@ function getFloorTile(i, j) {
 function makeCompass() {
     var directions = ["N", "W", "S", "E"];
     for (var i = 0; i < 4; i++) {
-        $("#compass").append('<a-entity rotation="0 ' + (90 * i) + ' 0" position="0 -.02 0"><a-box color="#000000" scale=".25 .025 .25" position="0 .6 -.8" rotation="0 45 0"></a-box><a-entity text="value: ' + directions[i] + ';" mixin="futura" position="0 .615 -.8" rotation="270 0 0" scale="4 4 4"></a-entity></a-entity>');
+        $("#compass").append('<a-entity rotation="0 ' + (90 * i) + ' 0" position="0 0 0"><a-box color="#000000" scale=".25 .025 .25" position="0 .6 -.8" rotation="0 45 0"></a-box><a-entity text="value: ' + directions[i] + ';" mixin="futura" position="0 .61 -.8" rotation="270 0 0" scale="4 4 4"></a-entity></a-entity>');
     }
 }
 
@@ -368,11 +368,11 @@ function createPanels() {
     for (var i = 0; i < 7; i++) {
         toInsert += '<a-entity class="boardPanel" id="boardPanel' + i + '" position="0 ' + (2.5 - .25 * i) + ' -1" visible="false">';
         toInsert += '<a-box id="numberPanel' + i + '" position="-1.15 0 0" scale=".2 .2 .025" color="#000000"></a-box>';
-        toInsert += '<a-entity id="numberText' + i + '" mixin="futura" scale="4 4 4" position="-1.14 0.01 0.01275" text="value: ' + (i + 1) + ';"></a-entity>';
+        toInsert += '<a-entity id="numberText' + i + '" mixin="futura" scale="4 4 4" position="-1.14 .04 0.01275" text="value: ' + (i + 1) + ';"></a-entity>';
         toInsert += '<a-box id="statementPanel' + i + '" scale="2 .2 .025" color="#ffffff"></a-box>';
         toInsert += '<a-entity id="statementText' + i + '" mixin="paneltext" scale="1.5 1.5 1.5" position="0 0.01 .01275" text="value: "></a-entity>';
         toInsert += '<a-box id="truthPanel' + i + '" position="1.15 0 0" scale=".2 .2 .025" color="#ff4d4d"></a-box>';
-        toInsert += '<a-entity id="truthText' + i + '" mixin="futura" scale="4 4 4" position="1.15 0.01 .01275" text="value: F; color: #ffffff;"></a-entity>';
+        toInsert += '<a-entity id="truthText' + i + '" mixin="futura" scale="4 4 4" position="1.15 .04 .01275" text="value: F; color: #ffffff;"></a-entity>';
         toInsert += '</a-entity>';
     }
     $("#board").append(toInsert);
@@ -735,8 +735,8 @@ function makeLever(id) {
     $("#selectLever" + id).append('<a-entity id="lever' + id + '" position="0 0 0"></a-entity>');
     $("#lever" + id).append('<a-cylinder color="#666" scale=".025 .4 .025" position="0 1.4 -1" rotation="90 0 0"></a-cylinder>');
     $("#lever" + id).append('<a-sphere id="handle' + id + '"  mixin="cube" class="lever" color="#666" scale=".05 .05 .05" position="0 1.4 -.8" rotation="90 0 0"></a-sphere>');
-    $("#selectLever" + id).append('<a-entity mixin="futura" scale="1.25 1.25 1.25" position="0 0.85 -1.09" text="value: ' + (id == 6 ? "LEVEL" : "LEVEL") + '; color: #808080;"></a-entity>');
-    $("#selectLever" + id).append('<a-entity mixin="futura" scale="5 5 5" position="0 .72 -1.09" text="value: ' + (id == 6 ? "S" : id) + '; color: #c0c0c0;"></a-entity>');
+    $("#selectLever" + id).append('<a-entity mixin="futura" scale="1.10 1.10 1.10" position="0 0.85 -1.09" text="value: ' + (id == 6 ? "LEVEL" : "LEVEL") + '; color: #808080;"></a-entity>');
+    $("#selectLever" + id).append('<a-entity mixin="futura" scale="5 5 5" position="0 .6 -1.09" text="value: ' + (id == 6 ? "S" : id) + '; color: #c0c0c0;"></a-entity>');
     $("#selectLever" + id).append('<a-sphere id="selectLeverBall' + id + '" color="#000000" position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".5"></a-sphere>');
     $("#selectLever" + id).append('<a-entity id="selectLeverBox' + id + '" position="0 1.65 -1.2" rotation="0 0 0"></a-entity>');
     $("#selectLeverBox" + id).append('<a-entity id="leverScore' + id + '" class="leverScore" mixin="futura" scale="1 1 1" position="0 0 .1 text="value: NEW!; color: #ffffff;"></a-entity>');

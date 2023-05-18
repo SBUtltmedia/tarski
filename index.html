@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script> 
   <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
  <!-- <script src="aframe-master.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.misc.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-super-hands-component@master/dist/super-hands.js"></script>
@@ -25,8 +26,8 @@
 </head>
 
 <body>
-    <a-scene      cursor="rayOrigin: mouse"
-    raydcaster="objects:.shape, .lever, .infChoiceBox;" >
+    <a-scene   grab   cursor="rayOrigin: mouse"
+    raycaster="objects:.shape, .lever, .infChoiceBox,#dragPlane;" >
 
         <a-assets>
                    <a-mixin id="pointer" raycaster="showLine: true; objects: .shape, .lever, .infChoiceBox"
@@ -47,10 +48,10 @@
 
             material="color: #EF2D5E;"></a-mixin>
             <a-mixin id="floorTile" scale=".2 .1 .2"></a-mixin>
-            <a-mixin id="futura" text="color:#FFFFFF; shader: msdf; align:center; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/sourcecodepro/SourceCodePro-Medium.json;" ext="font: fonts/futura-demi-sdf.fnt; align: center"></a-mixin>
-            <a-mixin id="logicfont" text="color:#FFFFFF; shader: msdf;align:center; font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/sourcecodepro/SourceCodePro-Medium.json;"  ext="font: fonts/logic.fnt; align: center"></a-mixin>
-            <a-mixin id="helptext" text="font: fonts/logic.fnt; align: center; color: #ffffff"></a-mixin>
-            <a-mixin id="paneltext" ext="color:#000000; shader: msdf;align:center; font:https://cdn.aframe.io/fonts/Roboto-msdf.json;" text="font: fonts/logic.fnt; align: center; color: #000000"></a-mixin>
+            <a-mixin id="futura"  text="color:#FFF; shader: msdf;align:center; font-image: fonts/latinmodern-math.png; negate:false;font: fonts/latinmodern-math-msdf.json;" negate="false"></a-mixin>
+            <a-mixin id="logicfont"  text="color:#FFF; shader: msdf;align:center; font-image: fonts/latinmodern-math.png; negate:false;font: fonts/latinmodern-math-msdf.json;" negate="false"></a-mixin>
+            <a-mixin id="helptext"   text="color:#FFF; shader: msdf;align:center; font-image: fonts/latinmodern-math.png; negate:false;font: fonts/latinmodern-math-msdf.json;" negate="false"></a-mixin>
+            <a-mixin id="paneltext" text="color:#000000; shader: msdf;align:center; font-image: fonts/latinmodern-math.png; negate:false;font: fonts/latinmodern-math-msdf.json;" negate="false" ></a-mixin>
             <a-mixin id="laserWallGrid" material="color: #000000; opacity: .5"></a-mixin>
             <a-mixin id="laserDevice" geometry="primitive: cone; radius-top: .7; radius-bottom: .85; height: .25; segments-height: 8; segments-radial: 8" material="color: #707070"></a-mixin>
         </a-assets>
@@ -59,7 +60,8 @@
         </a-entity> -->
         <a-entity>
             <a-camera id="camera"></a-camera>
-            <!-- <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: left"></a-entity>
+	</a-plane>   
+         <!-- <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: left"></a-entity>
             <a-entity sphere-collider="objects: a-box" super-hands hand-controls="hand: right"></a-entity> -->
           </a-entity>
         <a-entity id="game" position="0 0 0">
@@ -188,7 +190,7 @@
                 <a-sphere position="0 1.65 -1.2" radius=".1" segments-height="8" segments-width="8" opacity=".25"></a-sphere>
                 <a-entity mixin="futura" scale=".8 .8 .8" position="0 1.65 -1.1" text="value: PULL\nTO\nSTART; color: #808080; align: center;"></a-entity>
                 <a-box color="#000" scale="1 .24 .01" position="0 2 -1.2"></a-box>
-                <a-entity mixin="futura" scale="1.5 1.5 1.5" position="0 2 -1.19" text="value: Note: Vive controllers are\nrequired to play this game!; color: #ffffff; align: center;"></a-entity>
+                <a-entity mixin="futura" scale="1.5 1.5 1.5" position="0 2 -1.19" text="value: Note: VR controllers are\nrequired to play this game!; color: #ffffff; align: center;"></a-entity>
             </a-entity>
             <a-entity id="exitLever" rotation="0 180 0" position="0 0 0.5" scale="0 0 0">
                 <a-box color="#444" scale=".2 1.5 .2" position="0 .75 -1.2"></a-box>
