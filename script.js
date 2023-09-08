@@ -281,7 +281,7 @@ function shapeEnter(i) {
     }
     $("#shape" + i).attr("position", start.x + " " + start.y + " " + start.z);
     $(start).animate(mid, {
-        duration: 200,
+        duration: 400,
         easing: "easeOutQuad",
         step: function () {
             $("#shape" + i).attr("position", this.x + " " + this.y + " " + this.z);
@@ -291,7 +291,7 @@ function shapeEnter(i) {
         "y": pos.y,
         "z": pos.z
     }, {
-        duration: 400,
+        duration: 800,
         easing: "easeInQuad",
         step: function () {
             $("#shape" + i).attr("position", this.x + " " + this.y + " " + this.z);
@@ -299,14 +299,14 @@ function shapeEnter(i) {
     });
     setTimeout(function () {
         $("#shape" + i).attr("position", pos.x + " " + pos.y + " " + pos.z);
-    }, 700);
+    }, 1300);
     // Animate the dispenser horns
     $({
         h: 1.2
     }).animate({
         h: 1
     }, {
-        duration: 100,
+        duration: 500,
         easing: "easeInQuad",
         step: function () {
             $("#horn" + (i % 3)).attr("scale", "1 " + this.h + " 1");
