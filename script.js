@@ -8,9 +8,21 @@ var currentChapter = -1;
 var currentLevel = -1;
 
 var inVR = false;
-
+var sounds=["thwump","fanfare"]
 $(function () {
+    setTimeout(()=>
+    sounds.forEach(sound=>{
+
+        $('#game').append(
+            
+            $(`<a-entity sound="src: url(audio/${sound}.mp3)" id="sound_${sound}"></a-entity>`
+            )
+            )
+        }),1000);
     var scene = document.querySelector('a-scene');
+
+ 
+
     scene.addEventListener("enter-vr", function () {
         inVR = true;
         $(".vive-controls").attr("visible", "true");
@@ -162,6 +174,7 @@ function tick() {
     }
     updateWatch();
     requestAnimationFrame(tick);
+
 }
 
 // Make the floor tiles (called once only)
@@ -227,11 +240,15 @@ function loadShapes() {
 function prepareShapeEnter(i) {
     setTimeout(function () {
         shapeEnter(i);
-    }, 100 * i);
+        var entity = document.querySelector('#sound_thwump')
+        entity.components.sound.stopSound();
+        entity.components.sound.playSound();
+    }, 500 * i);
 }
 
 // Animate a shape entering the play area, fired out of the machine
 function shapeEnter(i) {
+
     // Animate moving the shape
     var shape = shapes[i];
     var pos = getCoordsFromGrid(shape.x, shape.y, shape.z);
@@ -917,6 +934,8 @@ function startLevel(id) {
 
 // Complete a level; animate the shapes fading out and move on to the next level if possible 
 function completeLevel() {
+    var entity = document.querySelector('#sound_fanfare')
+    entity.components.sound.playSound();
     setLight(currentLevel, "complete");
     disableHandControls();
     endTime = (new Date()).getTime();
