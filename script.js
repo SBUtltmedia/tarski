@@ -1,4 +1,6 @@
+//var TEST_MODE = true;
 var TEST_MODE = false;
+
 var UNLOCK_ALL = false;
 var ENABLE_LASER_GRID = false;
 
@@ -622,9 +624,9 @@ function loadHelpTextFromCode(code) {
         }
     }
     if (index > -1) {
-        makeHelpText(index);
+        makeHelpText(tutorial[index]);
     } else {
-        makeHelpText(-1);
+        makeHelpText();
     }
 }
 
@@ -681,16 +683,17 @@ function loadTutorial() {
             tutorial.push(level);
         }
         if (TEST_MODE) {
-            //loadLevel(levels.length - 1);
-            //loadLevelFromCode("5-7");
+            //loadLevel(1);
+            //loadLevelFromCode("1-1");
         }
+  console.log(tutorial)
     });
 }
 
-function makeHelpText(index) {
+function makeHelpText(tutorial) {
     $("#tutorial").empty();
-    if (index > -1) {
-        helptext = tutorial[index].lines;
+    if (tutorial) {
+        helptext = tutorial.lines;
         for (var i = 0; i < helptext.length; i++) {
             var help = helptext[i];
             // Make box
@@ -715,7 +718,8 @@ function makeHelpText(index) {
 }
 
 function playGameIntro() {
-    // Exit lever
+    // Exit lever'
+    makeHelpText(tutorial[0])
     $({
         r: 0
     }).animate({
@@ -929,7 +933,7 @@ function startLevel(id) {
         setLight(currentLevel, "active");
         loadLevelFromCode(currentChapter + "-" + currentLevel);
         showExitLever();
-    }, 1000);
+    }, 2000);
 }
 
 // Complete a level; animate the shapes fading out and move on to the next level if possible 
