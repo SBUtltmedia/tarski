@@ -233,9 +233,7 @@ init: function () {
         	var mousePosition = cursor.components.raycaster.getIntersection(this.dragPlane);
 		if(!mousePosition){return}
 		this.dragPlane.setAttribute('position',this.hitEl.getAttribute('position'))
-		console.log(this.dragPlane)
 		var currentPosition= mousePosition.point
-		console.log(mousePosition)
 		/*
 		{
                     x: position.x + this.deltaPosition.x*.2,

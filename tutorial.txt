@@ -1,3 +1,6 @@
+0-0
+2 .25 0 .575 1; Please look at your left or right to pick a level.
+
 1-1
 2 .25 0 .575 2; Move the blocks to make the statement true.
 .9 .125 -.5 .25 1; bottom .75; For all shapes x...
