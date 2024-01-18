@@ -1,5 +1,5 @@
-var TEST_MODE = true;
-// var TEST_MODE = false;
+//var TEST_MODE = true;
+var TEST_MODE = false;
 
 var UNLOCK_ALL = false;
 var ENABLE_LASER_GRID = false;
